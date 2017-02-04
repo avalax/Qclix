@@ -14,7 +14,6 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 	apply plugin: 'jacoco'
-    apply plugin: 'pmd'
 
     version = '1.0'
     ext {
@@ -36,16 +35,6 @@ allprojects {
 	jacoco {
 		toolVersion = "0.7.7.201606060606"
 	}
-
-    pmd{
-        toolVersion="5.5.2"
-    }
-    
-    afterEvaluate {
-        if (project.tasks.findByName(':check')) {
-            check.dependsOn('pmd')
-        }
-    }
 }
 
 project(":desktop") {
@@ -84,10 +73,18 @@ project(":android") {
 
 project(":core") {
     apply plugin: "java"
+    apply plugin: "pmd"
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    }
+
+    pmd{
+        toolVersion="5.5.2"
+
+        ruleSetFiles = files("pmd.xml")
+        ignoreFailures = true
     }
 }
 
@@ -124,17 +121,4 @@ task jacocoTestReport(type: JacocoReport) {
 		xml.destination = "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
 		html.destination = "${project.buildDir}/reports/jacoco/test"
 	}
-}
-
-task pmd(type: Pmd) {
-    ruleSetFiles = files("pmd.xml")
-    ignoreFailures = true
-    source 'src/main/java'
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-        xml.destination "${project.buildDir}/reports/pmd/pmd.xml"
-        html.destination "${project.buildDir}/reports/pmd/pmd.html"
-    }
 }
