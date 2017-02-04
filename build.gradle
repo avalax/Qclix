@@ -75,6 +75,7 @@ project(":core") {
     apply plugin: "java"
     apply plugin: "pmd"
     apply plugin: "checkstyle"
+    apply plugin: "findbugs"
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -82,7 +83,7 @@ project(":core") {
     }
 
     pmd{
-        toolVersion="5.5.2"
+        toolVersion "5.5.2"
         ruleSetFiles = files("pmd.xml")
         ignoreFailures = true
     }
@@ -92,6 +93,13 @@ project(":core") {
         configFile = file("checkstyle.xml")
         ignoreFailures = true
         showViolations = true
+    }
+
+    findbugs{
+        toolVersion "3.0.1"
+        ignoreFailures = true
+        excludeFilter = file("findbugs.xml")
+        effort = 'max'
     }
 }
 
